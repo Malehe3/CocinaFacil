@@ -32,20 +32,10 @@ def text_to_speech(input_language, output_language, text, tld):
     tts.save(f"temp/{my_file_name}.mp3")
     return my_file_name, trans_text
 
-recipe_options = ["Nueva receta", "Receta anterior"]
-
 with st.expander('Analizar frase'):
-    text = st.selectbox('Elige una opción:', recipe_options)
-    
-    if text == "Nueva receta":
-        text_input = st.text_input('Escribe por favor tu receta: ')
-    else:
-        # Use the recipe from the previous selection
-        text_input = trans_text if 'trans_text' in locals() else ""
-        st.write(f"Receta anterior: {text_input}")
-
-    if text_input:
-        translation = translator.translate(text_input, src="es", dest="en")
+    text = st.text_input('Escribe por favor: ')
+    if text:
+        translation = translator.translate(text, src="es", dest="en")
         trans_text = translation.text
         blob = TextBlob(trans_text)
         st.write('Polarity: ', round(blob.sentiment.polarity,2))
@@ -190,8 +180,4 @@ if st.button("Aceptar"):
         st.write(f" {output_text}")
 
 remove_files(7)
-
-   
-
-
 
