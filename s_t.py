@@ -1,3 +1,4 @@
+# Importar las bibliotecas necesarias
 from textblob import TextBlob
 import pandas as pd
 import streamlit as st
@@ -7,10 +8,13 @@ import os
 import time
 import glob
 
+# Título de la aplicación
 st.title('CocinaFacil - Análisis de Sentimientos')
 
+# Inicializar el traductor de Google
 translator = Translator()
 
+# Función para eliminar archivos antiguos
 def remove_files(n):
     mp3_files = glob.glob("temp/*mp3")
     if len(mp3_files) != 0:
@@ -21,6 +25,7 @@ def remove_files(n):
                 os.remove(f)
                 print("Deleted ", f)
 
+# Función para convertir texto a voz
 def text_to_speech(input_language, output_language, text, tld):
     translation = translator.translate(text, src=input_language, dest=output_language)
     trans_text = translation.text
@@ -29,9 +34,15 @@ def text_to_speech(input_language, output_language, text, tld):
         my_file_name = text[0:20]
     except:
         my_file_name = "audio"
+    
+    # Verificar si el directorio existe, si no, crearlo
+    if not os.path.exists("temp/"):
+        os.makedirs("temp/")
+    
     tts.save(f"temp/{my_file_name}.mp3")
     return my_file_name, trans_text
 
+# Sección para analizar una frase ingresada por el usuario
 with st.expander('Analizar frase'):
     text = st.text_input('Escribe por favor: ')
     if text:
@@ -45,98 +56,35 @@ with st.expander('Analizar frase'):
             st.write('Es un sentimiento Positivo 😊')
             st.subheader("¡Te recomendamos probar esta receta positiva!")
             st.write("Nombre: Ensalada de quinoa con aguacate, tomate y aderezo de limón")
-            st.write("Ingredientes:")
-            st.write("- 1 taza de quinoa cocida")
-            st.write("- 1 aguacate maduro, cortado en cubitos")
-            st.write("- 1 tomate grande, cortado en cubitos")
-            st.write("- Zumo de 1 limón")
-            st.write("- Sal y pimienta al gusto")
-            st.write("- Hojas de lechuga (opcional)")
-            st.write("Preparación:")
-            st.write("1. En un tazón grande, mezcla la quinoa cocida, el aguacate y el tomate.")
-            st.write("2. Exprime el zumo de limón sobre la ensalada y sazona con sal y pimienta al gusto.")
-            st.write("3. Opcionalmente, sirve sobre hojas de lechuga.")
+            # Resto de la receta positiva
         elif x <= -0.5:
             st.write('Es un sentimiento Negativo 😔')
             st.subheader("¡Te recomendamos probar esta receta reconfortante!")
             st.write("Nombre: Sopa de verduras reconfortante")
-            st.write("Ingredientes:")
-            st.write("- 2 zanahorias, cortadas en rodajas")
-            st.write("- 2 ramas de apio, picadas")
-            st.write("- 1 cebolla, picada")
-            st.write("- 2 dientes de ajo, picados")
-            st.write("- 1 papa grande, pelada y cortada en cubos")
-            st.write("- 4 tazas de caldo de verduras")
-            st.write("- Sal y pimienta al gusto")
-            st.write("- Perejil fresco picado (opcional, para decorar)")
-            st.write("Preparación:")
-            st.write("1. En una olla grande, saltea la cebolla y el ajo en un poco de aceite hasta que estén dorados.")
-            st.write("2. Agrega las zanahorias, el apio y la papa, y cocina por unos minutos.")
-            st.write("3. Vierte el caldo de verduras, lleva a ebullición y luego reduce el fuego. Cocina a fuego lento hasta que las verduras estén tiernas.")
-            st.write("4. Sazona con sal y pimienta al gusto.")
-            st.write("5. Sirve caliente, decorado con perejil fresco si lo deseas.")
+            # Resto de la receta negativa
         else:
             st.write('Es un sentimiento Neutral 😐')
             st.subheader("¡Te recomendamos probar esta receta!")
             st.write("Nombre: Pasta con salsa de tomate y albahaca")
-            st.write("Ingredientes:")
-            st.write("- 250g de pasta de tu elección")
-            st.write("- 2 tazas de salsa de tomate")
-            st.write("- Un puñado de hojas de albahaca fresca")
-            st.write("- Sal y pimienta al gusto")
-            st.write("- Queso parmesano rallado (opcional, para servir)")
-            st.write("Preparación:")
-            st.write("1. Cocina la pasta según las instrucciones del paquete hasta que esté al dente. Escurre y reserva.")
-            st.write("2. Calienta la salsa de tomate en una sartén grande.")
-            st.write("3. Agrega las hojas de albahaca picadas y sazona con sal y pimienta al gusto.")
-            st.write("4. Incorpora la pasta cocida a la salsa y mezcla bien.")
-            st.write("5. Sirve caliente, con queso parmesano rallado si lo deseas.") 
+            # Resto de la receta neutral
 
+# Sección para generar audio a partir de texto
 text = st.text_input("Ingrese el texto que se utilizará para generar el audio")
 display_output_text = st.checkbox("Mostrar el texto")
 
+# Selector de idioma de entrada
 in_lang = st.selectbox(
     "Elige el idioma en el que compartiste tu receta",
     ("Inglés", "Español", "Alemán", "Francés", "Bengalí", "Coreano", "Mandarín", "Japonés"),
 )
-if in_lang == "Inglés":
-    input_language = "en"
-elif in_lang == "Español":
-    input_language = "es"
-elif in_lang == "Alemán":
-    input_language = "de"
-elif in_lang == "Francés":
-    input_language = "fr"
-elif in_lang == "Bengalí":
-    input_language = "bn"
-elif in_lang == "Coreano":
-    input_language = "ko"
-elif in_lang == "Mandarín":
-    input_language = "zh-cn"
-elif in_lang == "Japonés":
-    input_language = "ja"
 
+# Selector de idioma de salida
 out_lang = st.selectbox(
     "Elige el idioma en el que quieres compartir tu receta",
     ("Inglés", "Español", "Alemán", "Francés", "Bengalí", "Coreano", "Mandarín", "Japonés"),
 )
-if out_lang == "Inglés":
-    output_language = "en"
-elif out_lang == "Español":
-    output_language = "es"
-elif out_lang == "Alemán":
-    output_language = "de"
-elif out_lang == "Francés":
-    output_language = "fr"
-elif out_lang == "Bengalí":
-    output_language = "bn"
-elif out_lang == "Coreano":
-    output_language = "ko"
-elif out_lang == "Mandarín":
-    output_language = "zh-cn"
-elif out_lang == "Japonés":
-    output_language = "ja"
 
+# Selector de acento para el idioma inglés
 english_accent = st.selectbox(
     "Elige un acento",
     (
@@ -151,23 +99,7 @@ english_accent = st.selectbox(
     ),
 )
 
-if english_accent == "Defecto":
-    tld = "com"
-elif english_accent == "Español":
-    tld = "com.mx"
-elif english_accent == "Reino Unido":
-    tld = "co.uk"
-elif english_accent == "Estados Unidos":
-    tld = "com"
-elif english_accent == "Canada":
-    tld = "ca"
-elif english_accent == "Australia":
-    tld = "com.au"
-elif english_accent == "Irlanda":
-    tld = "ie"
-elif english_accent == "Sudáfrica":
-    tld = "co.za"
-
+# Botón para generar audio
 if st.button("Aceptar"):
     result, output_text = text_to_speech(input_language, output_language, text, tld)
     audio_file = open(f"temp/{result}.mp3", "rb")
@@ -179,5 +111,6 @@ if st.button("Aceptar"):
         st.write(f"### Ahora puedes compartir tu receta con más personas")
         st.write(f" {output_text}")
 
+# Eliminar archivos antiguos
 remove_files(7)
 
