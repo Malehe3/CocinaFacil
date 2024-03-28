@@ -92,7 +92,9 @@ with st.expander('Analizar frase'):
             st.write("4. Incorpora la pasta cocida a la salsa y mezcla bien.")
             st.write("5. Sirve caliente, con queso parmesano rallado si lo deseas.") 
 
-text = str(result.get("GET_TEXT"))
+text = st.text_input("Ingrese el texto que se utilizará para generar el audio")
+display_output_text = st.checkbox("Mostrar el texto")
+
 in_lang = st.selectbox(
     "Elige el idioma en el que compartiste tu receta",
     ("Inglés", "Español", "Alemán", "Francés", "Bengalí", "Coreano", "Mandarín", "Japonés"),
@@ -120,26 +122,62 @@ out_lang = st.selectbox(
 )
 if out_lang == "Inglés":
     output_language = "en"
+elif out_lang == "Español":
+    output_language = "es"
+elif out_lang == "Alemán":
+    output_language = "de"
+elif out_lang == "Francés":
+    output_language = "fr"
+elif out_lang == "Bengalí":
+    output_language = "bn"
+elif out_lang == "Coreano":
+    output_language = "ko"
+elif out_lang == "Mandarín":
+    output_language = "zh-cn"
+elif out_lang == "Japonés":
+    output_language = "ja"
+
+english_accent = st.selectbox(
+    "Elige un acento",
+    (
+        "Defecto",
+        "Español",
+        "Reino Unido",
+        "Estados Unidos",
+        "Canada",
+        "Australia",
+        "Irlanda",
+        "Sudáfrica",
+    ),
+)
+
+if english_accent == "Defecto":
+    tld = "com"
+elif english_accent == "Español":
+    tld = "com.mx"
+elif english_accent == "Reino Unido":
+    tld = "co.uk"
+elif english_accent == "Estados Unidos":
+    tld = "com"
+elif english_accent == "Canada":
+    tld = "ca"
+elif english_accent == "Australia":
+    tld = "com.au"
+elif english_accent == "Irlanda":
+    tld = "ie"
+elif english_accent == "Sudáfrica":
+    tld = "co.za"
 
 if st.button("Aceptar"):
     result, output_text = text_to_speech(input_language, output_language, text, tld)
     audio_file = open(f"temp/{result}.mp3", "rb")
     audio_bytes = audio_file.read()
-    st.markdown(f"## Tú audio:")
+    st.markdown(f"## Tu audio:")
     st.audio(audio_bytes, format="audio/mp3", start_time=0)
 
     if display_output_text:
         st.write(f"### Ahora puedes compartir tu receta con más personas")
         st.write(f" {output_text}")
 
-def remove_files(n):
-    mp3_files = glob.glob("temp/*mp3")
-    if len(mp3_files) != 0:
-        now = time.time()
-        n_days = n * 86400
-        for f in mp3_files:
-            if os.stat(f).st_mtime < now - n_days:
-                os.remove(f)
-                print("Deleted ", f)
-
 remove_files(7)
+
