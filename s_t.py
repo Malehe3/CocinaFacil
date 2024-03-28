@@ -9,8 +9,6 @@ import glob
 
 st.title('CocinaFacil - Análisis de Sentimientos')
 
-st.markdown("#### ¡Bienvenido a CocinaFacil con ChefIA, tu asistente de cocina personal! Describe tu día en una frase y te recomendaremos una receta adecuada para tu estado de ánimo:")
-
 translator = Translator()
 
 def remove_files(n):
@@ -122,53 +120,6 @@ out_lang = st.selectbox(
 )
 if out_lang == "Inglés":
     output_language = "en"
-elif out_lang == "Español":
-    output_language = "es"
-elif out_lang == "Alemán":
-    output_language = "de"
-elif out_lang == "Francés":
-    output_language = "fr"
-elif out_lang == "Bengalí":
-    output_language = "bn"
-elif out_lang == "Coreano":
-    output_language = "ko"
-elif out_lang == "Mandarín":
-    output_language = "zh-cn"
-elif out_lang == "Japonés":
-    output_language = "ja"
-
-english_accent = st.selectbox(
-    "Elige un acento",
-    (
-        "Defecto",
-        "Español",
-        "Reino Unido",
-        "Estados Unidos",
-        "Canada",
-        "Australia",
-        "Irlanda",
-        "Sudáfrica",
-    ),
-)
-
-if english_accent == "Defecto":
-    tld = "com"
-elif english_accent == "Español":
-    tld = "com.mx"
-elif english_accent == "Reino Unido":
-    tld = "co.uk"
-elif english_accent == "Estados Unidos":
-    tld = "com"
-elif english_accent == "Canada":
-    tld = "ca"
-elif english_accent == "Australia":
-    tld = "com.au"
-elif english_accent == "Irlanda":
-    tld = "ie"
-elif english_accent == "Sudáfrica":
-    tld = "co.za"
-
-display_output_text = st.checkbox("Mostrar el texto")
 
 if st.button("Aceptar"):
     result, output_text = text_to_speech(input_language, output_language, text, tld)
@@ -181,7 +132,14 @@ if st.button("Aceptar"):
         st.write(f"### Ahora puedes compartir tu receta con más personas")
         st.write(f" {output_text}")
 
+def remove_files(n):
+    mp3_files = glob.glob("temp/*mp3")
+    if len(mp3_files) != 0:
+        now = time.time()
+        n_days = n * 86400
+        for f in mp3_files:
+            if os.stat(f).st_mtime < now - n_days:
+                os.remove(f)
+                print("Deleted ", f)
+
 remove_files(7)
-
-
-
