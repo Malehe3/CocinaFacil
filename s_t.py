@@ -22,18 +22,16 @@ def remove_files(n):
                 print("Deleted ", f)
 
 def text_to_speech(input_language, output_language, text, tld):
-    translation = translator.translate(text, src=input_language, dest=output_language)
-    trans_text = translation.text
-    tts = gTTS(trans_text, lang=output_language, tld=tld, slow=False)
+    tts = gTTS(text, lang=output_language, tld=tld, slow=False)
     try:
         my_file_name = text[0:20]
     except:
         my_file_name = "audio"
     tts.save(f"temp/{my_file_name}.mp3")
-    return my_file_name, trans_text
+    return my_file_name
 
 with st.expander('Analizar frase'):
-    text = st.text_input('Escribe por favor: ')
+    text = st.text_area('Escribe por favor tu receta:')
     if text:
         translation = translator.translate(text, src="es", dest="en")
         trans_text = translation.text
@@ -92,32 +90,10 @@ with st.expander('Analizar frase'):
             st.write("4. Incorpora la pasta cocida a la salsa y mezcla bien.")
             st.write("5. Sirve caliente, con queso parmesano rallado si lo deseas.") 
 
-text = st.text_input("Ingrese el texto que se utilizará para generar el audio")
 display_output_text = st.checkbox("Mostrar el texto")
 
-in_lang = st.selectbox(
-    "Elige el idioma en el que compartiste tu receta",
-    ("Inglés", "Español", "Alemán", "Francés", "Bengalí", "Coreano", "Mandarín", "Japonés"),
-)
-if in_lang == "Inglés":
-    input_language = "en"
-elif in_lang == "Español":
-    input_language = "es"
-elif in_lang == "Alemán":
-    input_language = "de"
-elif in_lang == "Francés":
-    input_language = "fr"
-elif in_lang == "Bengalí":
-    input_language = "bn"
-elif in_lang == "Coreano":
-    input_language = "ko"
-elif in_lang == "Mandarín":
-    input_language = "zh-cn"
-elif in_lang == "Japonés":
-    input_language = "ja"
-
 out_lang = st.selectbox(
-    "Elige el idioma en el que quieres compartir tu receta",
+    "Elige el idioma para el audio de tu receta",
     ("Inglés", "Español", "Alemán", "Francés", "Bengalí", "Coreano", "Mandarín", "Japonés"),
 )
 if out_lang == "Inglés":
@@ -169,7 +145,7 @@ elif english_accent == "Sudáfrica":
     tld = "co.za"
 
 if st.button("Aceptar"):
-    result, output_text = text_to_speech(input_language, output_language, text, tld)
+    result = text_to_speech("es", output_language, text, tld)
     audio_file = open(f"temp/{result}.mp3", "rb")
     audio_bytes = audio_file.read()
     st.markdown(f"## Tu audio:")
@@ -177,7 +153,9 @@ if st.button("Aceptar"):
 
     if display_output_text:
         st.write(f"### Ahora puedes compartir tu receta con más personas")
-        st.write(f" {output_text}")
+        st.write(f" {text}")
 
 remove_files(7)
+
+
 
