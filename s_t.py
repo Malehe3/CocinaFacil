@@ -77,11 +77,45 @@ in_lang = st.selectbox(
     ("Inglés", "Español", "Alemán", "Francés", "Bengalí", "Coreano", "Mandarín", "Japonés"),
 )
 
+if in_lang == "Inglés":
+    input_language = "en"
+elif in_lang == "Español":
+    input_language = "es"
+elif in_lang == "Alemán":
+    input_language = "de"
+elif in_lang == "Francés":
+    input_language = "fr"
+elif in_lang == "Bengalí":
+    input_language = "bn"
+elif in_lang == "Coreano":
+    input_language = "ko"
+elif in_lang == "Mandarín":
+    input_language = "zh-cn"
+elif in_lang == "Japonés":
+    input_language = "ja"
+
 # Selector de idioma de salida
 out_lang = st.selectbox(
     "Elige el idioma en el que quieres compartir tu receta",
     ("Inglés", "Español", "Alemán", "Francés", "Bengalí", "Coreano", "Mandarín", "Japonés"),
 )
+
+if out_lang == "Inglés":
+    output_language = "en"
+elif out_lang == "Español":
+    output_language = "es"
+elif out_lang == "Alemán":
+    output_language = "de"
+elif out_lang == "Francés":
+    output_language = "fr"
+elif out_lang == "Bengalí":
+    output_language = "bn"
+elif out_lang == "Coreano":
+    output_language = "ko"
+elif out_lang == "Mandarín":
+    output_language = "zh-cn"
+elif out_lang == "Japonés":
+    output_language = "ja"
 
 # Selector de acento para el idioma inglés
 english_accent = st.selectbox(
@@ -98,6 +132,23 @@ english_accent = st.selectbox(
     ),
 )
 
+if english_accent == "Defecto":
+    tld = "com"
+elif english_accent == "Español":
+    tld = "com.mx"
+elif english_accent == "Reino Unido":
+    tld = "co.uk"
+elif english_accent == "Estados Unidos":
+    tld = "com"
+elif english_accent == "Canada":
+    tld = "ca"
+elif english_accent == "Australia":
+    tld = "com.au"
+elif english_accent == "Irlanda":
+    tld = "ie"
+elif english_accent == "Sudáfrica":
+    tld = "co.za"
+
 # Botón para generar audio
 if st.button("Aceptar"):
     result, output_text = text_to_speech(input_language, output_language, text, tld)
@@ -112,4 +163,3 @@ if st.button("Aceptar"):
 
 # Eliminar archivos antiguos
 remove_files(7)
-
