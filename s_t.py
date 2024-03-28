@@ -70,7 +70,6 @@ with st.expander('Analizar frase'):
 
 # Sección para generar audio a partir de texto
 text = st.text_input("Ingrese el texto que se utilizará para generar el audio")
-display_output_text = st.checkbox("Mostrar el texto")
 
 # Selector de idioma de entrada
 in_lang = st.selectbox(
